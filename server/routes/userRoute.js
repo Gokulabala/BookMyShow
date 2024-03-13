@@ -1,7 +1,9 @@
 const router = require('express').Router()
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 const User = require('../models/userModel')
+const authmiddleware = require('../middleware/authmiddleware')
 
 // register a user
 
@@ -34,6 +36,58 @@ router.post('/register', async (req, res)=>{
     }
 })
 
-module.exports = router 
+//login Routes
 
-//sample
+router.post('/login' , async (req , res)=>{
+    //checking email
+    const user = await User.findOne({email : req.body.email})
+    if(!user){
+        return res.send({
+            success : false,
+            message : 'User does not exist'
+        })
+    }
+
+    //checking password
+    const validPassword = await bcrypt.compare(req.body.password , user.password)
+    if(!validPassword){
+        return res.send({
+            success : false,
+            message : 'Invalid Password'
+        })
+    }
+
+
+    //generate token while user logged in
+    const token = jwt.sign({userID : user._id}, process.env.jwt_secret, {expiresIn:"100d"})
+    // console.log(token)
+    
+
+//everything is ok 
+   res.send({
+        success : true,
+        message : 'User Logged in',
+        data : token
+        
+    })
+})
+
+
+router.get('/get-current-user', authmiddleware , async(req,res)=>{
+    try {
+        const user = await User.findById(req.body.userID).select('-password')
+
+        res.send({
+            success : true,
+            message : "User details fetched successfully",
+            data : user
+        })
+    } catch (error) {
+        res.send({
+            success : false,
+            message : error.message
+        })
+    }
+})
+
+module.exports = router 
