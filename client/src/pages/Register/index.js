@@ -1,15 +1,40 @@
-import React from "react"
+import React, {useEffect} from "react"
 import {Form, message} from 'antd'
-import { Link } from "react-router-dom"
+import { Link,useNavigate } from "react-router-dom"
 import Button from "../../components/Button"
+import { RegisterUser } from "../../apicalls/users"
 
 const Register =()=>{
+    const navigate = useNavigate()
+    const onFinish = async (values)=>{
+        try{
+            const response = await RegisterUser(values)
+            if(response.success){
+                message.success(response.message)
+                console.log(response.message)
+            }
+            else{
+                message.error(response.message)
+                console.log(response.message)
+            }
+        }
+        catch(error){
+            message.error(error)
+        }
+    }
+
+    useEffect(() => {
+        if (localStorage.getItem("token")) {
+          navigate("/");
+        }
+      }, []);
+
     return(
         <div className="flex justify-center h-screen items-center bg-primary">
             <div className="card p-3 w-400">
                 <h1 className="text-xl mb-1">Welcome to Scaler Shows! Please Register</h1>
                 <hr/>
-                <Form layout="vertical" className="mt-1" >
+                <Form layout="vertical" className="mt-1" onFinish={onFinish}>
                     <Form.Item label='name' name='name' rules={[{required:true, message:"Please enter your name"}]}>
                         <input type="text" />
 
