@@ -59,7 +59,7 @@ router.post('/login' , async (req , res)=>{
 
 
     //generate token while user logged in
-    const token = jwt.sign({userID : user._id}, process.env.jwt_secret, {expiresIn:"100d"})
+    const token = jwt.sign({userID : user._id}, process.env.jwt_secret, {expiresIn:"1d"})
     // console.log(token)
     
 
