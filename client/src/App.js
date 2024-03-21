@@ -20,7 +20,7 @@ function App() {
 
         <Route path='/' element ={<ProtectedRoute><Home/></ProtectedRoute>} />
         <Route path='/login' element = {<Login/>} />
-        <Route path='Register' element= {<Register/>} />
+        <Route path='/Register' element= {<Register/>} />
 
       </Routes>
 

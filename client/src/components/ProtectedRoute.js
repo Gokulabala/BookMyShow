@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { SetUser } from "../redux/usersSlice";
 import { HideLoading, ShowLoading } from "../redux/loadersSlice";
+import axios from "axios";
 
 function ProtectedRoute({ children }) {
   const { user } = useSelector((state) => state.users);
@@ -12,9 +13,18 @@ function ProtectedRoute({ children }) {
   const dispatch = useDispatch();
 
   const getpresentUser = async () => {
+    // console.log("hello")
     try {
       dispatch(ShowLoading());
-      const response = await GetCurrentUser();
+      // const response = await GetCurrentUser();
+      const headers = {
+        'Content-Type' : 'application/json',
+        Authorization : `Bearer ${localStorage.getItem('token')}`
+
+      } 
+      const res = await axios.get('http://localhost:8085/api/users/get-current-user', {headers})
+      const response = res.data
+      console.log(response)
       dispatch(HideLoading());
       if (response.success) {
         dispatch(SetUser(response.data));
@@ -33,8 +43,11 @@ function ProtectedRoute({ children }) {
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
+      
       getpresentUser();
-    } else {
+      
+    } 
+    else {
       navigate("/login");
     }
   }, []);
