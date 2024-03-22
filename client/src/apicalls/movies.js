@@ -19,3 +19,13 @@ export const GetAllMovies = async () => {
         return error.response;
     }
 }
+
+// edit a Movie
+export const UpdateMovie = async (payload) => {
+    try {
+        const response = await axiosInstance.post("/api/movies/update-movie", payload);
+        return response.data;
+    } catch (error) {
+        return error.response;
+    }
+}
