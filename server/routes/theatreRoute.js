@@ -129,4 +129,20 @@ router.post("/add-show", authMiddleware, async (req, res) => {
   }
 });
 
+  // delete show
+  router.post("/delete-show", authMiddleware, async (req, res) => {
+    try {
+      await Show.findByIdAndDelete(req.body.showId);
+      res.send({
+        success: true,
+        message: "Show deleted successfully",
+      });
+    } catch (error) {
+      res.send({
+        success: false,
+        message: error.message,
+      });
+    }
+  });
+
 module.exports = router;

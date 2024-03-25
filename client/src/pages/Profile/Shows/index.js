@@ -3,7 +3,7 @@ import React, { useState ,  useEffect } from 'react'
 import Button from '../../../components/Button'
 import { useDispatch } from "react-redux";
 import { HideLoading, ShowLoading } from "../../../redux/loadersSlice";
-import { AddShow , GetAllShowsByTheatre} from "../../../apicalls/theatres";
+import { AddShow , GetAllShowsByTheatre, DeleteShow} from "../../../apicalls/theatres";
 import { GetAllMovies } from "../../../apicalls/movies";
 import moment from "moment";
 
@@ -66,24 +66,24 @@ function Shows({ openShowsModal, setOpenShowsModal, theatre }) {
 
     }
 
-      //handle Delete
-    //   const handleDelete = async (id) => {
-    //     try {
-    //       dispatch(ShowLoading());
-    //       const response = await DeleteShow({ showId: id });
+      // handle Delete
+      const handleDelete = async (id) => {
+        try {
+          dispatch(ShowLoading());
+          const response = await DeleteShow({ showId: id });
     
-    //       if (response.success) {
-    //         message.success(response.message);
-    //         getData();
-    //       } else {
-    //         message.error(response.message);
-    //       }
-    //       dispatch(HideLoading());
-    //     } catch (error) {
-    //       message.error(error.message);
-    //       dispatch(HideLoading());
-    //     }
-    //   };
+          if (response.success) {
+            message.success(response.message);
+            getData();
+          } else {
+            message.error(response.message);
+          }
+          dispatch(HideLoading());
+        } catch (error) {
+          message.error(error.message);
+          dispatch(HideLoading());
+        }
+      };
 
     const columns = [
         {
@@ -133,9 +133,9 @@ function Shows({ openShowsModal, setOpenShowsModal, theatre }) {
                 {record.bookedSeats.length === 0 && (
                   <i
                     className="ri-delete-bin-line"
-                    // onClick={() => {
-                    // //   handleDelete(record._id);
-                    // }}
+                    onClick={() => {
+                      handleDelete(record._id);
+                    }}
                   ></i>
                 )}
               </div>

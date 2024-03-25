@@ -87,3 +87,17 @@ export const AddTheatre = async (payload) => {
       return error.response;
     }
   };
+
+  // delete shows
+
+  export const DeleteShow = async (payload) => {
+    try {
+      const response = await axiosInstance.post(
+        "/api/theatres/delete-show",
+        payload
+      );
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  };
