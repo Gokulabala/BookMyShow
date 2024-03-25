@@ -1,9 +1,89 @@
-import React, {useState} from 'react'
 import { Col, Form, Modal, Row, Table, message } from "antd"
+import React, { useState ,  useEffect } from 'react'
 import Button from '../../../components/Button'
+import { useDispatch } from "react-redux";
+import { HideLoading, ShowLoading } from "../../../redux/loadersSlice";
+import { AddShow , GetAllShowsByTheatre} from "../../../apicalls/theatres";
+import { GetAllMovies } from "../../../apicalls/movies";
+import moment from "moment";
 
 function Shows({ openShowsModal, setOpenShowsModal, theatre }) {
     let [view, setView] = useState("table");
+    let [movies , setMovies] = useState([])
+    const [shows, setShows] = useState([]);
+    const dispatch = useDispatch();
+
+    //getdata
+    const getData = async () => {
+        try {
+          dispatch(ShowLoading());
+          const moviesResponse = await GetAllMovies();
+          if (moviesResponse.success) {
+            setMovies(moviesResponse.data);
+          } else {
+            message.error(moviesResponse.message);
+          }
+    
+          const showsResponse = await GetAllShowsByTheatre({
+            theatreId: theatre._id,
+          });
+          if (showsResponse.success) {
+            setShows(showsResponse.data);
+          } else {
+            message.error(showsResponse.message);
+          }
+          dispatch(HideLoading());
+        } catch (error) {
+          message.error(error.message);
+          dispatch(HideLoading());
+        }
+      };
+
+      //handle add show
+      const handleAddShow = async (values) => {
+        try {
+            dispatch(ShowLoading());
+            const response = await AddShow({
+                ...values,
+                theatre: theatre._id,
+            });
+
+            if (response.success) {
+                message.success(response.message);
+                getData();
+                setView("table");
+            } else {
+                message.error(response.message);
+            }
+            dispatch(HideLoading());
+        } catch (error) {
+            message.error(error.message);
+            dispatch(HideLoading());
+        }
+
+
+
+
+    }
+
+      //handle Delete
+    //   const handleDelete = async (id) => {
+    //     try {
+    //       dispatch(ShowLoading());
+    //       const response = await DeleteShow({ showId: id });
+    
+    //       if (response.success) {
+    //         message.success(response.message);
+    //         getData();
+    //       } else {
+    //         message.error(response.message);
+    //       }
+    //       dispatch(HideLoading());
+    //     } catch (error) {
+    //       message.error(error.message);
+    //       dispatch(HideLoading());
+    //     }
+    //   };
 
     const columns = [
         {
@@ -14,12 +94,13 @@ function Shows({ openShowsModal, setOpenShowsModal, theatre }) {
           title: "Date",
           dataIndex: "date",
           render: (text, record) => {
-            // return moment(text).format("MMM Do YYYY");
+            return moment(text).format("MMM Do YYYY");
           },
         },
         {
           title: "Time",
           dataIndex: "time",
+
         },
         {
           title: "Movie",
@@ -53,7 +134,7 @@ function Shows({ openShowsModal, setOpenShowsModal, theatre }) {
                   <i
                     className="ri-delete-bin-line"
                     // onClick={() => {
-                    //   handleDelete(record._id);
+                    // //   handleDelete(record._id);
                     // }}
                   ></i>
                 )}
@@ -62,6 +143,11 @@ function Shows({ openShowsModal, setOpenShowsModal, theatre }) {
           },
         },
       ];
+
+      useEffect(() => {
+        getData();
+      }, []);
+
     return (
         <Modal title=""
             open={openShowsModal}
@@ -90,11 +176,11 @@ function Shows({ openShowsModal, setOpenShowsModal, theatre }) {
       </div>
 
 
-      {view==='table' && <Table columns={columns}/>}
+      {view==='table' && <Table columns={columns} dataSource={shows}/>}
 
 
       {view === "form" && (
-        <Form layout="vertical">
+        <Form layout="vertical" onFinish={handleAddShow}>
           <Row gutter={[16, 16]}>
             <Col span={8}>
               <Form.Item
@@ -136,9 +222,9 @@ function Shows({ openShowsModal, setOpenShowsModal, theatre }) {
               >
                 <select>
                   <option value="">Select Movie</option>
-                  {/* {movies.map((movie) => (
+                  {movies.map((movie) => (
                     <option value={movie._id}>{movie.title}</option>
-                  ))} */}
+                  ))}
                 </select>
               </Form.Item>
             </Col>
