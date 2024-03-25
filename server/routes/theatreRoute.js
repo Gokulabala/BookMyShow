@@ -22,7 +22,7 @@ router.post("/add-theatre", authMiddleware, async (req, res) => {
   }
 });
 
- // get all theatres by owner
+// get all theatres by owner
  router.post("/get-all-theatres-by-owner", authMiddleware, async (req, res) => {
     try {
       const theatres = await Theatre.find({ owner: req.body.owner })

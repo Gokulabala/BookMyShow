@@ -13,7 +13,7 @@ export const AddTheatre = async (payload) => {
   };
 
    // get all theatres by owner
-   export const GetAllTheatresByOwner = async (payload) => {
+  export const GetAllTheatresByOwner = async (payload) => {
     try {
       const response = await axiosInstance.post(
         "/api/theatres/get-all-theatres-by-owner",
