@@ -6,9 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { GetShowById } from "../../apicalls/theatres";
 import { HideLoading, ShowLoading } from "../../redux/loadersSlice";
-//  import StripeCheckout from "react-stripe-checkout";
+ import StripeCheckout from "react-stripe-checkout";
 import Button from "../../components/Button";
-// import { BookShowTickets, MakePayment } from "../../apicalls/bookings";
+import { BookShowTickets, MakePayment } from "../../apicalls/bookings";
 
 function BookShow() {
   const { user } = useSelector((state) => state.users);
@@ -111,27 +111,27 @@ function BookShow() {
 //     }
 //   };
 
-//   const onToken = async (token) => {
+  const onToken = async (token) => {
 
-//     console.log(token)
-//     try {
-//       dispatch(ShowLoading());
-//       const response = await MakePayment(
-//         token,
-//         selectedSeats.length * show.ticketPrice * 100
-//       );
-//       if (response.success) {
-//         message.success(response.message);
-//          book(response.data);
-//       } else {
-//         message.error(response.message);
-//       }
-//       dispatch(HideLoading());
-//     } catch (error) {
-//       message.error(error.message);
-//       dispatch(HideLoading());
-//     }
-//   };
+    console.log(token)
+    try {
+      dispatch(ShowLoading());
+      const response = await MakePayment(
+        token,
+        selectedSeats.length * show.ticketPrice * 100
+      );
+      if (response.success) {
+        message.success(response.message);
+        //  book(response.data);
+      } else {
+        message.error(response.message);
+      }
+      dispatch(HideLoading());
+    } catch (error) {
+      message.error(error.message);
+      dispatch(HideLoading());
+    }
+  };
 
   useEffect(() => {
     getData();
@@ -176,14 +176,14 @@ function BookShow() {
                 </h1>
               </div>
             </div>
-            {/* <StripeCheckout
+            <StripeCheckout
               token={onToken}
               amount={selectedSeats.length * show.ticketPrice * 100}
               billingAddress
-              stripeKey="pk_test_51JKPQWSJULHQ0FL7VOkMrOMFh0AHMoCFit29EgNlVRSvFkDxSoIuY771mqGczvd6bdTHU1EkhJpojOflzoIFGmj300Uj4ALqXa"
+              stripeKey="pk_test_51OypqXSCZIoef2VTSZGW3EoUIaEbfwOBnEd5L86UXNdsr3cAj0w4vCdf3lFjpLYlRtKyq6ctjKi5xxW9dqyauAvI00M9qFdQq2"
             >
               <Button title="Book Now" />
-            </StripeCheckout> */}
+            </StripeCheckout>
           </div>
         )}
       </div>
