@@ -7,12 +7,14 @@ import { useSelector } from "react-redux";
 import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
 import TheatresForMovie from "./pages/TheatresForMovie";
+import BookShow from "./pages/BookShow";
 
 import './stylesheets/alignments.css'
 import './stylesheets/custom.css'
 import './stylesheets/form-elements.css'
 import './stylesheets/sizes.css'
 import './stylesheets/theme.css'
+
 
 
 function App() {
@@ -50,6 +52,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <TheatresForMovie />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/book-show/:id"
+            element={
+              <ProtectedRoute>
+                <BookShow />
               </ProtectedRoute>
             }
           />
