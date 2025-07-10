@@ -1,0 +1,38 @@
+# Ignore node_modules in both frontend and backend
+**/node_modules/
+
+# Ignore environment variables
+**/.env
+
+# Ignore logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignore OS/system files
+.DS_Store
+Thumbs.db
+
+# Ignore build artifacts
+**/dist/
+**/build/
+
+# Ignore .history folder (especially from VS Code extensions)
+.history/
+
+# Ignore VSCode settings if any
+.vscode/
+
+# Ignore coverage reports (if using Jest or other test tools)
+coverage/
+
+# Ignore local IDE configs
+*.sublime-workspace
+*.sublime-project
+
+# Optional: ignore database dump/backups if any
+*.sqlite
+*.db
+*.sql
+*.dump
